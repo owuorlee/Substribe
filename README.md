@@ -13,6 +13,7 @@ get paid reliably. Nobody shares a password, ever.
 | [SCOPE.md](SCOPE.md) | Full product scope — positioning, flows, trust system, roadmap. **Source of truth.** |
 | [docs/DATABASE.md](docs/DATABASE.md) | Schema guide: entities, RLS model, conventions |
 | [docs/LEDGER.md](docs/LEDGER.md) | Double-entry ledger: accounts, posting matrix, invariants |
+| [docs/PAYMENTS.md](docs/PAYMENTS.md) | M-Pesa integration spec: state machines, webhooks, timers, edge cases |
 
 ## Stack
 
@@ -40,5 +41,6 @@ supabase db reset   # apply all migrations + seed
 
 ## Status
 
-Phase 1 (see SCOPE.md §12): database + ledger foundation ✅ · payments spec →
-next · web app → after that. Launch vertical: **Spotify Premium Family**.
+Phase 1 (see SCOPE.md §12): database + ledger foundation ✅ · payments spec ✅ ·
+web app + payment Edge Functions → next. Launch vertical: **Spotify Premium
+Family**.
