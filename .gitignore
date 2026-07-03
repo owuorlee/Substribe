@@ -1,0 +1,26 @@
+# deps / builds
+node_modules/
+.next/
+out/
+dist/
+
+# env & secrets — never commit credentials
+.env
+.env.*
+!.env.example
+
+# supabase local state
+supabase/.temp/
+supabase/.branches/
+
+# local tooling state
+.claude/settings.local.json
+
+# platform
+.vercel/
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
