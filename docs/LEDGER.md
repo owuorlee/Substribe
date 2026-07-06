@@ -43,10 +43,14 @@ Every business event posts exactly one balanced transaction:
 | 5 | Refund issued as wallet credit | `buyer_escrow(buyer)` | `wallet(buyer)` | `wallet_refund` |
 | 6 | Wallet top-up (STK success) | `mpesa_operating` | `wallet(buyer)` | `wallet_topup` |
 | 7 | Renewal charged from wallet | `wallet(buyer)` | `buyer_escrow(buyer)` | `wallet_charge` |
-| 8 | Goodwill credit (make-whole loop) | `insurance_reserve` | `wallet(buyer)` | `goodwill_credit` |
+| 8 | Goodwill credit (make-whole loop) † | `insurance_reserve` | `wallet(buyer)` | `goodwill_credit` |
 | 9 | M-Pesa reversal of a received payment | `buyer_escrow(buyer)` | `mpesa_operating` | `payment_reversal` |
 | 10 | Failed B2C payout (money returns) | `mpesa_operating` | `owner_payable(owner)` | `payout_reversal` |
 | 11 | Manual correction (admin, memo required) | *case by case* | *case by case* | `adjustment` |
+
+† Until the insurance reserve has funds (early days), goodwill credits debit
+`platform_revenue` instead (contra-revenue) so no liability balance goes
+negative. `refund_to_wallet()` picks the source automatically.
 
 ### Worked example — the happy path, KSh 250 Spotify seat
 

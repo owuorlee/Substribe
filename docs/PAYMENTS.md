@@ -114,7 +114,11 @@ same Postgres transaction** — no half-applied money.
 
 **STK Query discipline:** first query at T+3min (querying too early returns
 "transaction is being processed"), then T+5, T+10. Rate-limited API — back off,
-never hammer.
+never hammer. **Note:** STK Query returns a ResultCode but *no receipt number*,
+and success posts require proof (LEDGER.md rule 4) — so a query-confirmed
+*success* stays `pending` (parked to audit) until the late callback or the
+statement reconciliation supplies the receipt. Query-confirmed *failures*
+resolve immediately.
 
 **Seat reservation concurrency:** reserving is one atomic statement —
 `UPDATE seats SET status='reserved', buyer_id=$1, reserved_at=now() WHERE id=$2
