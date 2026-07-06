@@ -48,10 +48,10 @@ export default function Home() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="#waitlist"
+              href="/browse"
               className="rounded-xl bg-white px-6 py-3.5 text-center font-semibold text-brand-strong shadow-lg transition hover:bg-emerald-50"
             >
-              Join the waitlist
+              Browse open seats
             </a>
             <a
               href="#how"

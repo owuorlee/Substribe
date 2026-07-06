@@ -32,15 +32,25 @@ docs/           # database + ledger documentation
 
 ## Local development
 
-Prereqs: Docker + [Supabase CLI](https://supabase.com/docs/guides/cli).
+Prereqs: Docker + [Supabase CLI](https://supabase.com/docs/guides/cli) + Node 18+.
 
 ```bash
 supabase start      # spin up local Postgres/Auth/API
 supabase db reset   # apply all migrations + seed
+
+cd web
+cp .env.example .env.local   # fill in the Supabase URL + anon key
+npm install
+npm run dev
 ```
+
+Phone OTP sign-in needs an SMS provider configured in Supabase Auth
+(Twilio et al.); local dev can use a fixed test OTP
+(`supabase/config.toml` → `[auth.sms.test_otp]`).
 
 ## Status
 
 Phase 1 (see SCOPE.md §12): database + ledger foundation ✅ · payments spec ✅ ·
-web app + payment Edge Functions → next. Launch vertical: **Spotify Premium
-Family**.
+payment engine + Edge Functions ✅ · core screens (login, browse, join/pay,
+dashboard) ✅ · next: owner listing flow, Supabase project setup, sandbox
+end-to-end test. Launch vertical: **Spotify Premium Family**.
