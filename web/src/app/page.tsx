@@ -104,8 +104,13 @@ export default function Home() {
           <h2 className="text-2xl font-bold">Launching in Kenya first 🇰🇪</h2>
           <p className="mx-auto mt-2 max-w-md text-stone-600">
             We&apos;re opening seat by seat so every member gets looked after.
-            Waitlist opens soon.
           </p>
+          <a
+            href="/list"
+            className="mt-5 inline-block rounded-xl bg-brand px-6 py-3 font-semibold text-white transition hover:bg-brand-strong"
+          >
+            Own a family plan? List your seats
+          </a>
         </div>
       </section>
 

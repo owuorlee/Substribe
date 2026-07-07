@@ -39,8 +39,13 @@ const seatStatusCopy: Record<string, { label: string; tone: string }> = {
   suspended: { label: "Suspended", tone: "bg-red-50 text-red-700" },
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ listed?: string }>;
+}) {
   if (!isSupabaseConfigured()) return <SetupNotice />;
+  const { listed } = await searchParams;
   const supabase = await supabaseServer();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -71,6 +76,13 @@ export default async function DashboardPage() {
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
       <h1 className="text-2xl font-bold sm:text-3xl">Your dashboard</h1>
+
+      {listed === "1" && (
+        <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+          🎉 Your listing is live. We&apos;ll notify you the moment someone
+          joins a seat — then you send the invite and get paid.
+        </p>
+      )}
 
       {/* ── My seats (buyer side) ── */}
       <section className="mt-8">
@@ -136,11 +148,22 @@ export default async function DashboardPage() {
 
       {/* ── My listings (owner side) ── */}
       <section className="mt-10">
-        <h2 className="text-lg font-semibold">My listings</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">My listings</h2>
+          <a
+            href="/list"
+            className="text-sm font-semibold text-brand hover:text-brand-strong"
+          >
+            + List a plan
+          </a>
+        </div>
         {listings.length === 0 ? (
           <p className="mt-3 rounded-2xl border border-dashed border-stone-300 bg-white p-6 text-center text-sm text-stone-600">
-            You haven&apos;t listed a plan yet. Listing opens soon — get your
-            empty seats earning.
+            You haven&apos;t listed a plan yet.{" "}
+            <a href="/list" className="font-semibold text-brand">
+              List your empty seats
+            </a>{" "}
+            and let the plan pay for itself.
           </p>
         ) : (
           <ul className="mt-3 space-y-3">
