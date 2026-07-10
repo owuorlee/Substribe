@@ -9,6 +9,7 @@ change commits atomically with its ledger post. Spec: [docs/PAYMENTS.md](../../d
 | `mpesa-stk-initiate` | user JWT | Reserve seat → create payment → send STK push |
 | `mpesa-stk-callback` | per-payment URL token | Ingest Daraja STK result, ack 200, process |
 | `payments-cron` | `x-cron-secret` header | Heartbeat: retries, STK queries, sweeps |
+| `notifications-worker` | `x-cron-secret` header | Drain the notifications outbox via WhatsApp/SMS |
 
 ## Secrets
 
@@ -27,12 +28,27 @@ supabase secrets set \
 `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` are injected
 automatically. Shortcode `174379` is the shared Daraja sandbox paybill.
 
+Messaging (notifications-worker). With none of these set, `DELIVERY_MODE`
+defaults to `log` — messages print to function logs so the pipeline is fully
+testable without provider accounts:
+
+```bash
+supabase secrets set \
+  DELIVERY_MODE=auto \
+  WHATSAPP_TOKEN=... \
+  WHATSAPP_PHONE_NUMBER_ID=... \
+  AT_API_KEY=... \
+  AT_USERNAME=... \
+  AT_SENDER_ID=SUBSTRIBE   # optional short code / sender id
+```
+
 ## Deploy
 
 ```bash
 supabase functions deploy mpesa-stk-initiate
-supabase functions deploy mpesa-stk-callback --no-verify-jwt   # Daraja sends no JWT
-supabase functions deploy payments-cron      --no-verify-jwt   # authed by CRON_SECRET
+supabase functions deploy mpesa-stk-callback   --no-verify-jwt   # Daraja sends no JWT
+supabase functions deploy payments-cron        --no-verify-jwt   # authed by CRON_SECRET
+supabase functions deploy notifications-worker --no-verify-jwt   # authed by CRON_SECRET
 ```
 
 ## Schedule the heartbeat (every minute)
@@ -43,6 +59,13 @@ Supabase Dashboard → Integrations → Cron, or via pg_cron + pg_net:
 select cron.schedule('payments-heartbeat', '* * * * *', $$
   select net.http_post(
     url     := 'https://<project-ref>.supabase.co/functions/v1/payments-cron',
+    headers := jsonb_build_object('x-cron-secret', '<CRON_SECRET>')
+  );
+$$);
+
+select cron.schedule('notifications-drain', '* * * * *', $$
+  select net.http_post(
+    url     := 'https://<project-ref>.supabase.co/functions/v1/notifications-worker',
     headers := jsonb_build_object('x-cron-secret', '<CRON_SECRET>')
   );
 $$);
