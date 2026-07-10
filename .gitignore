@@ -13,6 +13,9 @@ dist/
 supabase/.temp/
 supabase/.branches/
 
+# generated bootstrap bundle (derived from migrations/ — not a source of truth)
+supabase/_bootstrap.generated.sql
+
 # local tooling state
 .claude/settings.local.json
 
