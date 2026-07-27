@@ -164,9 +164,10 @@ begin
   raise notice '════════════════════════════════════════════';
 end $$;
 
--- Final grid: balances vs. expected (eyeball confirmation).
+-- Balances vs. expected, captured before the rollback wipes them.
+create temp table _test_result on commit drop as
 select
-  b.kind,
+  b.kind::text as kind,
   coalesce(b.user_id::text, '(platform)') as account,
   b.balance_cents,
   case b.kind
@@ -176,7 +177,20 @@ select
     when 'insurance_reserve' then 1000
     when 'buyer_escrow'      then 0
   end as expected_cents
-from public.ledger_account_balances b
-order by b.kind;
+from public.ledger_account_balances b;
+
+select kind, account, balance_cents, expected_cents,
+       case when balance_cents = expected_cents then 'OK' else 'MISMATCH' end as verdict
+from _test_result
+order by kind;
 
 rollback;
+
+-- Visible confirmation as the final statement (the editor shows this grid).
+-- Reaching here at all means every assertion above passed — any mismatch
+-- raises an exception instead.
+select
+  'ALL ASSERTIONS PASSED' as result,
+  (select count(*) from public.listings)      as listings_left_behind,
+  (select count(*) from public.ledger_entries) as ledger_rows_left_behind,
+  'see Messages panel for the step-by-step trace' as note;
