@@ -8,8 +8,14 @@ get paid reliably. Nobody shares a password, ever.
 
 ## Documents
 
+> **New to this project (human or AI agent)? Start at
+> [docs/handoff/AGENT_ONBOARDING.md](docs/handoff/AGENT_ONBOARDING.md).**
+> The `docs/handoff/` directory is the complete pickup package: current status, architecture,
+> what's real vs stubbed, and the task-by-task roadmap to production.
+
 | Doc | What it is |
 |---|---|
+| [docs/handoff/](docs/handoff/AGENT_ONBOARDING.md) | **Handoff package — read first** |
 | [SCOPE.md](SCOPE.md) | Full product scope — positioning, flows, trust system, roadmap. **Source of truth.** |
 | [docs/DATABASE.md](docs/DATABASE.md) | Schema guide: entities, RLS model, conventions |
 | [docs/LEDGER.md](docs/LEDGER.md) | Double-entry ledger: accounts, posting matrix, invariants |
